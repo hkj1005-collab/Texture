@@ -125,14 +125,14 @@ MainFrame.BorderColor3 = Color3.fromRGB(65, 65, 70)
 MainFrame.BorderSizePixel = 1
 MainFrame.Active = true
 MainFrame.Draggable = true
-MainFrame.Visible = true -- 預設開啟面板方便手機操作
+MainFrame.Visible = true 
 MainFrame.Parent = ScreenGui
 
--- Mobile Screen Toggle Button (手機常駐按鈕)
+-- Mobile Screen Toggle Button
 local MobileMenuBtn = Instance.new("TextButton")
 MobileMenuBtn.Name = "MobileMenuBtn"
 MobileMenuBtn.Size = UDim2.new(0, 110, 0, 32)
-MobileMenuBtn.Position = UDim2.new(0, 15, 0, 15) -- 畫面左上角
+MobileMenuBtn.Position = UDim2.new(0, 15, 0, 15)
 MobileMenuBtn.BackgroundColor3 = Color3.fromRGB(24, 22, 26)
 MobileMenuBtn.BorderColor3 = Color3.fromRGB(255, 100, 100)
 MobileMenuBtn.BorderSizePixel = 1
@@ -142,7 +142,7 @@ MobileMenuBtn.TextColor3 = Color3.fromRGB(255, 120, 120)
 MobileMenuBtn.TextSize = 12
 MobileMenuBtn.ZIndex = 150
 MobileMenuBtn.Active = true
-MobileMenuBtn.Draggable = true -- 允許在手機畫面上拖曳位置
+MobileMenuBtn.Draggable = true 
 MobileMenuBtn.Parent = ScreenGui
 
 local function updateMenuButtonText()
@@ -238,14 +238,10 @@ local function createTab(name, width)
     return TabPage
 end
 
--- UI Tabs Creation
 local TexturesTab = createTab("Texture Pack", 100)
 local MapTab = createTab("Map Darkener", 100)
 local SettingsTab = createTab("Unload", 100)
 
--- ==========================================
--- DYNAMIC JSON TEXTURE PACK SYSTEM
--- ==========================================
 local OriginalAssets = setmetatable({}, {__mode = "k"})
 local ActivePackDisableFunc = nil
 local ActivePackButton = nil
@@ -266,39 +262,39 @@ local function getAsset(url: string): string
 	return (success and result) or url
 end
 
--- 完美導入你的 Undertale & Deltarune 材質/音效包設定檔
+-- 修正後：全面替換為開放社群的 Undertale 純數字音效 ID
 local Rules = {
 	{ids = {12187323909, 12187320363, 12187354260, 12187342816, 12187280273, 12187303601, 12187262242, 12187288714, 12187341500, 12187271237, 12187341020}, url = "https://githubusercontent.com"},
-	{ids = {6384899588}, url = "rbxassetid://AUDIO_APPEARANCE.wav"}, -- 開場/登場音效 (intro)
-	{ids = {8483887957}, url = "rbxassetid://snd_weaponpull.wav"}, -- 武器拔出/閃爍音效 (sparkle pop -> weaponpull)
-	{ids = {16537337310, 16537449730}, url = "rbxassetid://snd_break1.wav"}, -- 破壞/擊碎音效 (all heads with ding)
+	{ids = {6384899588}, url = "rbxassetid://9069609268"}, -- 開場音效 (Sans 登場聲)
+	{ids = {8483887957}, url = "rbxassetid://9114223147"}, -- 拔出音效 (選單移動聲)
+	{ids = {16537337310, 16537449730}, url = "rbxassetid://6541285184"}, -- 擊碎音效 (靈魂碎裂聲)
 	{ids = {7658055825}, url = "rbxassetid://6372755229"},
-{ids = {17016581922}, url = "rbxassetid://break2.ogg"}, -- 淘汰音效 (elim -> break2)
-{ids = {16810321565}, url = "rbxassetid://snd_closet_impact.ogg"}, -- 失敗/落敗音效 (change lose to deltarune)
-{ids = {16770456156}, url = "rbxassetid://mus_sfx_a_lithit.wav"}, -- 二段跳音效 (d jump -> deltarune sndswallow)
-{ids = {177266782}, url = "rbxassetid://snd_select.wav"}, -- 介面點擊音效 (click ui -> select deltarune)
-{ids = {16492958314}, url = "rbxassetid://snd_scytheburst.wav"}, -- 衝刺音效 (dash -> deltadash)
+	{ids = {17016581922}, url = "rbxassetid://6541285184"}, -- 淘汰音效 (靈魂碎裂聲)
+	{ids = {16810321565}, url = "rbxassetid://9083072214"}, -- 落敗音效 (Game Over 鋼琴聲)
+	{ids = {16770456156}, url = "rbxassetid://9114221327"}, -- 二段跳音效 (跳躍聲)
+{ids = {177266782}, url = "rbxassetid://9114227181"}, -- 介面點擊 (選單確認聲)
+{ids = {16492958314}, url = "rbxassetid://9117325515"}, -- 衝刺音效
 {ids = {16802957270}, url = "https://githubusercontent.com"},
-{ids = {103035811146294}, url = "rbxassetid://snd_b.wav"}, -- 地圖載入/初始化音效 (map init sound)
+{ids = {103035811146294}, url = "rbxassetid://9114223147"}, -- 地圖載入
 {ids = {81461991645938}, url = "https://githubusercontent.com"},
-{ids = {16810041280}, url = "rbxassetid://mus_sfx_abreak.wav"}, -- 勝利音效 (change win to undertale)
-{ids = {16530229695, 16530229541, 16530229616}, url = "rbxassetid://mus_sfx_gigapunch.wav"}, -- 擊殺音效 (kill to undertale)
-{ids = {17138490999}, url = "rbxassetid://heal.ogg"}, -- 治療音效 (heal sfx)
+{ids = {16810041280}, url = "rbxassetid://2923588961"}, -- 勝利音效 (得分/過關音樂)
+{ids = {16530229695, 16530229541, 16530229616}, url = "rbxassetid://5534241639"}, -- 擊殺音效 (打擊判定聲)
+{ids = {17138490999}, url = "rbxassetid://6541282202"}, -- 治療音效 (補血聲)
 {ids = {13854780042}, url = "https://githubusercontent.com"},
 {ids = {13854780213}, url = "https://githubusercontent.com"},
 {ids = {17803962335}, url = "https://githubusercontent.com"},
-{ids = {18525513345}, url = "rbxassetid://snd_dimbox.wav"}, -- 配對音效 (matchmaking to undertale)
-{ids = {13110130082}, url = "rbxassetid://snd_credit_s.wav"}, -- 命中標記音效 (hitmarker change)
-{ids = {17153811469}, url = "rbxassetid://snd_breakc.wav"}, -- 近戰失敗/攻擊未命中音效 (quick melee fail)
+{ids = {18525513345}, url = "rbxassetid://9114227181"}, -- 配對音效
+{ids = {13110130082}, url = "rbxassetid://5534241639"}, -- 命中音效
+{ids = {17153811469}, url = "rbxassetid://9113636306"}, -- 近戰揮空
 {ids = {13188153054, 13188242420, 13220167472, 13220167337}, url = "https://githubusercontent.com"},
-{ids = {17826470563}, url = "rbxassetid://Finale.ogg"}, -- 倒數音效 (countdown to finale)
-{ids = {17026600996}, url = "rbxassetid://snd_heavydamage.wav"}, -- 賽點音效 (matchpoint)
-{ids = {17467242617}, url = "rbxassetid://sdfinal.ogg"}, -- 猝死/延長賽音效 (sudden death)
-{ids = {18221725850, 18239670056, 18221726246}, url = "rbxassetid://snd_dumbvictory.wav"}, -- 另一種勝利音效 (win -> dumbvictory)
+{ids = {17826470563}, url = "rbxassetid://3410787012"}, -- 倒數音效
+{ids = {17026600996}, url = "rbxassetid://9113636306"}, -- 賽點音效
+{ids = {17467242617}, url = "rbxassetid://3410787012"}, -- 延長賽音效
+{ids = {18221725850, 18239670056, 18221726246}, url = "rbxassetid://2923588961"}, -- 另一種勝利
 {ids = {17813065011, 17813065464, 12099785239}, url = ""},
-{ids = {2108482005, 14147881792, 135908632589654, 84214501374682, 10196550937, 12261809766, 2108545280, 10196550667, 14147882149, 103020541883227, 89972436184102, 12261813110, 14147883091, 2108482395, 10196550128, 14147882405, 2108482542, 10196549902, 14147881297, 72960281658487, 92138082970751, 2108482676, 10196567794, 12261813678, 14147882761, 10196550367, 2108482231}, url = "rbxassetid://7658055825"},
+{ids = {2108482005, 14147881792, 135908632589654, 84214501374682, 10196550937, 12261809766, 2108545280, 10196550667, 14147882149, 103020541883227, 89972436184102, 12261813110, 14147883091, 2108482395, 10196550128, 14147882405, 2108482542, 1019649902, 14147881297, 72960281658487, 92138082970751, 2108482676, 10196567794, 12261813678, 14147882761, 10196550367, 2108482231}, url = "rbxassetid://7658055825"},
 {ids = {127338559130032, 16294586406, 75156669118637, 93477262732302}, url = "https://githubusercontent.com"},
-{ids = {17697682466, 17733314783}, url = "rbxassetid://Hotel.mp3"}, -- 背景音樂 (change music)
+{ids = {17697682466, 17733314783}, url = "rbxassetid://9043887031"}, -- 背景音樂 (Megalovania 經典音樂)
 {ids = {133917828562858, 121503061771505}, url = "https://githubusercontent.com"},
 {ids = {133793956251748}, url = "https://githubusercontent.com"},
 {ids = {116941545385923}, url = "https://githubusercontent.com"},
