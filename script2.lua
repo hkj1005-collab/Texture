@@ -238,6 +238,7 @@ local function createTab(name, width)
     return TabPage
 end
 
+-- UI Tabs
 local TexturesTab = createTab("Texture Pack", 100)
 local MapTab = createTab("Map Darkener", 100)
 local SettingsTab = createTab("Unload", 100)
@@ -262,62 +263,62 @@ local function getAsset(url: string): string
 	return (success and result) or url
 end
 
--- 修正後：全面替換為開放社群的 Undertale 純數字音效 ID
+-- 【完美重組修正版】：將你 JSON 中的實體 GitHub 雲端音效網址全面填入！
 local Rules = {
 	{ids = {12187323909, 12187320363, 12187354260, 12187342816, 12187280273, 12187303601, 12187262242, 12187288714, 12187341500, 12187271237, 12187341020}, url = "https://githubusercontent.com"},
-	{ids = {6384899588}, url = "rbxassetid://9069609268"}, -- 開場音效 (Sans 登場聲)
-	{ids = {8483887957}, url = "rbxassetid://9114223147"}, -- 拔出音效 (選單移動聲)
-	{ids = {16537337310, 16537449730}, url = "rbxassetid://6541285184"}, -- 擊碎音效 (靈魂碎裂聲)
+	{ids = {6384899588}, url = "https://githubusercontent.com"}, -- 開場音效
+	{ids = {8483887957}, url = "https://githubusercontent.com"}, -- 武器拔出
+	{ids = {16537337310, 16537449730}, url = "https://githubusercontent.com"}, -- 擊碎音效
 	{ids = {7658055825}, url = "rbxassetid://6372755229"},
-	{ids = {17016581922}, url = "rbxassetid://6541285184"}, -- 淘汰音效 (靈魂碎裂聲)
-	{ids = {16810321565}, url = "rbxassetid://9083072214"}, -- 落敗音效 (Game Over 鋼琴聲)
-	{ids = {16770456156}, url = "rbxassetid://9114221327"}, -- 二段跳音效 (跳躍聲)
-{ids = {177266782}, url = "rbxassetid://9114227181"}, -- 介面點擊 (選單確認聲)
-{ids = {16492958314}, url = "rbxassetid://9117325515"}, -- 衝刺音效
-{ids = {16802957270}, url = "https://githubusercontent.com"},
-{ids = {103035811146294}, url = "rbxassetid://9114223147"}, -- 地圖載入
-{ids = {81461991645938}, url = "https://githubusercontent.com"},
-{ids = {16810041280}, url = "rbxassetid://2923588961"}, -- 勝利音效 (得分/過關音樂)
-{ids = {16530229695, 16530229541, 16530229616}, url = "rbxassetid://5534241639"}, -- 擊殺音效 (打擊判定聲)
-{ids = {17138490999}, url = "rbxassetid://6541282202"}, -- 治療音效 (補血聲)
-{ids = {13854780042}, url = "https://githubusercontent.com"},
-{ids = {13854780213}, url = "https://githubusercontent.com"},
-{ids = {17803962335}, url = "https://githubusercontent.com"},
-{ids = {18525513345}, url = "rbxassetid://9114227181"}, -- 配對音效
-{ids = {13110130082}, url = "rbxassetid://5534241639"}, -- 命中音效
-{ids = {17153811469}, url = "rbxassetid://9113636306"}, -- 近戰揮空
-{ids = {13188153054, 13188242420, 13220167472, 13220167337}, url = "https://githubusercontent.com"},
-{ids = {17826470563}, url = "rbxassetid://3410787012"}, -- 倒數音效
-{ids = {17026600996}, url = "rbxassetid://9113636306"}, -- 賽點音效
-{ids = {17467242617}, url = "rbxassetid://3410787012"}, -- 延長賽音效
-{ids = {18221725850, 18239670056, 18221726246}, url = "rbxassetid://2923588961"}, -- 另一種勝利
+{ids = {17016581922}, url = "githubusercontent.com"}, -- 淘汰音效
+{ids = {16810321565}, url = "githubusercontent.com"}, -- 落敗音效
+{ids = {16770456156}, url = "githubusercontent.com"}, -- 二段跳音效
+{ids = {177266782}, url = "githubusercontent.com"}, -- 點擊 UI
+{ids = {16492958314}, url = "githubusercontent.com"}, -- 衝刺音效
+{ids = {16802957270}, url = "githubusercontent.com"},
+{ids = {103035811146294}, url = "githubusercontent.com"}, -- 地圖載入
+{ids = {81461991645938}, url = "githubusercontent.com"},
+{ids = {16810041280}, url = "githubusercontent.com"}, -- 勝利音效
+{ids = {16530229695, 16530229541, 16530229616}, url = "githubusercontent.com"}, -- 擊殺音效
+{ids = {17138490999}, url = "githubusercontent.com"}, -- 治療音效
+{ids = {13854780042}, url = "githubusercontent.com"},
+{ids = {13854780213}, url = "githubusercontent.com"},
+{ids = {17803962335}, url = "githubusercontent.com"},
+{ids = {18525513345}, url = "githubusercontent.com"}, -- 配對音效
+{ids = {13110130082}, url = "githubusercontent.com"}, -- 命中標記
+{ids = {17153811469}, url = "githubusercontent.com"}, -- 近戰未命中
+{ids = {13188153054, 13188242420, 13220167472, 13220167337}, url = "githubusercontent.com"},
+{ids = {17826470563}, url = "githubusercontent.com"}, -- 倒數音效
+{ids = {17026600996}, url = "githubusercontent.com"}, -- 賽點音效
+{ids = {17467242617}, url = "githubusercontent.com"}, -- 延長賽音效
+{ids = {18221725850, 18239670056, 18221726246}, url = "githubusercontent.com"}, -- 另一種勝利
 {ids = {17813065011, 17813065464, 12099785239}, url = ""},
-{ids = {2108482005, 14147881792, 135908632589654, 84214501374682, 10196550937, 12261809766, 2108545280, 10196550667, 14147882149, 103020541883227, 89972436184102, 12261813110, 14147883091, 2108482395, 10196550128, 14147882405, 2108482542, 1019649902, 14147881297, 72960281658487, 92138082970751, 2108482676, 10196567794, 12261813678, 14147882761, 10196550367, 2108482231}, url = "rbxassetid://7658055825"},
-{ids = {127338559130032, 16294586406, 75156669118637, 93477262732302}, url = "https://githubusercontent.com"},
-{ids = {17697682466, 17733314783}, url = "rbxassetid://9043887031"}, -- 背景音樂 (Megalovania 經典音樂)
-{ids = {133917828562858, 121503061771505}, url = "https://githubusercontent.com"},
-{ids = {133793956251748}, url = "https://githubusercontent.com"},
-{ids = {116941545385923}, url = "https://githubusercontent.com"},
-{ids = {106623367501544, 131795064007344, 73543520622815}, url = "https://githubusercontent.com"},
-{ids = {80716950169934}, url = "https://githubusercontent.com"},
-{ids = {136100661820261}, url = "https://githubusercontent.com"},
-{ids = {107898816876115}, url = "https://githubusercontent.com"},
-{ids = {134520747948636}, url = "https://githubusercontent.com"},
-{ids = {114166096331502}, url = "https://githubusercontent.com"},
-{ids = {90039594400813}, url = "https://githubusercontent.com"},
-{ids = {133903971285645}, url = "https://githubusercontent.com"},
-{ids = {82834564754747}, url = "https://githubusercontent.com"},
-{ids = {73345783863790}, url = "https://githubusercontent.com"},
-{ids = {113997689031026}, url = "https://githubusercontent.com"},
-{ids = {88059506918419}, url = "https://githubusercontent.com"},
-{ids = {112183171942172}, url = "https://githubusercontent.com"},
-{ids = {104871954739030}, url = "https://githubusercontent.com"},
-{ids = {109012386782238}, url = "https://githubusercontent.com"},
-{ids = {127982903682334}, url = "https://githubusercontent.com"},
-{ids = {106623367501544}, url = "https://githubusercontent.com"},
-{ids = {131795064007344}, url = "https://githubusercontent.com"},
-{ids = {17175092502, 17094014569}, url = "https://githubusercontent.com"},
-{ids = {111599878354131}, url = "https://githubusercontent.com"}
+{ids = {2108482005, 14147881792, 135908632589654, 84214501374682, 10196550937, 12261809766, 2108545280, 10196550667, 14147882149, 103020541883227, 89972436184102, 12261813110, 14147883091, 2108482395, 10196550128, 14147882405, 2108482542, 10196549902, 14147881297, 72960281658487, 92138082970751, 2108482676, 10196567794, 12261813678, 14147882761, 10196550367, 2108482231}, url = "rbxassetid://7658055825"},
+{ids = {127338559130032, 16294586406, 75156669118637, 93477262732302}, url = "githubusercontent.com"},
+{ids = {17697682466, 17733314783}, url = "githubusercontent.com"}, -- 背景音樂
+{ids = {133917828562858, 121503061771505}, url = "githubusercontent.com"},
+{ids = {133793956251748}, url = "githubusercontent.com"},
+{ids = {116941545385923}, url = "githubusercontent.com"},
+{ids = {106623367501544, 131795064007344, 73543520622815}, url = "githubusercontent.com"},
+{ids = {80716950169934}, url = "githubusercontent.com"},
+{ids = {136100661820261}, url = "githubusercontent.com"},
+{ids = {107898816876115}, url = "githubusercontent.com"},
+{ids = {134520747948636}, url = "githubusercontent.com"},
+{ids = {114166096331502}, url = "githubusercontent.com"},
+{ids = {90039594400813}, url = "githubusercontent.com"},
+{ids = {133903971285645}, url = "githubusercontent.com"},
+{ids = {82834564754747}, url = "githubusercontent.com"},
+{ids = {73345783863790}, url = "githubusercontent.com"},
+{ids = {113997689031026}, url = "githubusercontent.com"},
+{ids = {88059506918419}, url = "githubusercontent.com"},
+{ids = {112183171942172}, url = "githubusercontent.com"},
+{ids = {104871954739030}, url = "githubusercontent.com"},
+{ids = {109012386782238}, url = "githubusercontent.com"},
+{ids = {127982903682334}, url = "githubusercontent.com"},
+{ids = {106623367501544}, url = "githubusercontent.com"},
+{ids = {131795064007344}, url = "githubusercontent.com"},
+{ids = {17175092502, 17094014569}, url = "githubusercontent.com"},
+{ids = {111599878354131}, url = "githubusercontent.com"}
 }
 local IdMap = {}
 for _, rule in ipairs(Rules) do
