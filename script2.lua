@@ -1,0 +1,567 @@
+-- Services
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local Lighting = game:GetService("Lighting")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+
+-- ==========================================
+-- UNLOAD & STATE SYSTEM TRACKER
+-- ==========================================
+local isUnloaded = false
+local Connections = {}
+
+local function TrackConnection(conn)
+	if conn then
+		table.insert(Connections, conn)
+	end
+	return conn
+end
+
+-- UI Parent Setup
+local TargetParent = game:GetService("CoreGui")
+if gethui then TargetParent = gethui() end
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "CustomTextureLuaUI_Mobile"
+ScreenGui.ResetOnSpawn = false
+pcall(function() ScreenGui.Parent = TargetParent end)
+if not ScreenGui.Parent then ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui") end
+
+-- ==========================================
+-- HELPER: BATCH PROCESSING 
+-- ==========================================
+local function batchProcess(items, callback, batchSize)
+    batchSize = batchSize or 120
+    task.spawn(function()
+        for i = 1, #items do
+            if isUnloaded then break end 
+            callback(items[i])
+            if i % batchSize == 0 then
+                task.wait()
+            end
+        end
+    end)
+end
+
+-- ==========================================
+-- NOTIFICATION SYSTEM (BOTTOM LEFT)
+-- ==========================================
+local function showNotification(titleText, bodyText, duration)
+    if isUnloaded then return end
+    duration = duration or 5
+
+    local NotifFrame = Instance.new("Frame")
+    NotifFrame.Name = "NotificationFrame"
+    NotifFrame.Size = UDim2.new(0, 250, 0, 52)
+    NotifFrame.Position = UDim2.new(0, -270, 1, -70)
+    NotifFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 20)
+    NotifFrame.BorderColor3 = Color3.fromRGB(65, 65, 70)
+    NotifFrame.BorderSizePixel = 1
+    NotifFrame.ZIndex = 200
+    NotifFrame.Parent = ScreenGui
+
+    local AccentBar = Instance.new("Frame")
+    AccentBar.Size = UDim2.new(0, 3, 1, 0)
+    AccentBar.Position = UDim2.new(0, 0, 0, 0)
+    AccentBar.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+    AccentBar.BorderSizePixel = 0
+    AccentBar.ZIndex = 201
+    AccentBar.Parent = NotifFrame
+
+    local NotifTitle = Instance.new("TextLabel")
+    NotifTitle.Size = UDim2.new(1, -15, 0, 20)
+    NotifTitle.Position = UDim2.new(0, 12, 0, 6)
+    NotifTitle.BackgroundTransparency = 1
+    NotifTitle.Font = Enum.Font.Code
+    NotifTitle.Text = titleText
+    NotifTitle.TextColor3 = Color3.fromRGB(255, 100, 100)
+    NotifTitle.TextSize = 12
+    NotifTitle.TextXAlignment = Enum.TextXAlignment.Left
+    NotifTitle.ZIndex = 201
+    NotifTitle.Parent = NotifFrame
+
+    local NotifBody = Instance.new("TextLabel")
+    NotifBody.Size = UDim2.new(1, -15, 0, 20)
+    NotifBody.Position = UDim2.new(0, 12, 0, 26)
+    NotifBody.BackgroundTransparency = 1
+    NotifBody.Font = Enum.Font.Code
+    NotifBody.Text = bodyText
+    NotifBody.TextColor3 = Color3.fromRGB(200, 200, 205)
+    NotifBody.TextSize = 11
+    NotifBody.TextXAlignment = Enum.TextXAlignment.Left
+    NotifBody.ZIndex = 201
+    NotifBody.Parent = NotifFrame
+
+    local tweenIn = TweenService:Create(NotifFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+        Position = UDim2.new(0, 15, 1, -70)
+    })
+    tweenIn:Play()
+
+    task.delay(duration, function()
+        if not isUnloaded and NotifFrame and NotifFrame.Parent then
+            local tweenOut = TweenService:Create(NotifFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
+                Position = UDim2.new(0, -270, 1, -70)
+            })
+            tweenOut:Play()
+            tweenOut.Completed:Connect(function()
+                NotifFrame:Destroy()
+            end)
+        end
+    end)
+end
+
+showNotification("Undertale Mobile Loaded!", "Custom Build for Mobile Users", 5)
+
+-- ==========================================
+-- MAIN CONTAINER BUILD
+-- ==========================================
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 420, 0, 280)
+MainFrame.Position = UDim2.new(0.5, -210, 0.5, -140)
+MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 20)
+MainFrame.BorderColor3 = Color3.fromRGB(65, 65, 70)
+MainFrame.BorderSizePixel = 1
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.Visible = true -- 預設開啟面板方便手機操作
+MainFrame.Parent = ScreenGui
+
+-- Mobile Screen Toggle Button (手機常駐按鈕)
+local MobileMenuBtn = Instance.new("TextButton")
+MobileMenuBtn.Name = "MobileMenuBtn"
+MobileMenuBtn.Size = UDim2.new(0, 110, 0, 32)
+MobileMenuBtn.Position = UDim2.new(0, 15, 0, 15) -- 畫面左上角
+MobileMenuBtn.BackgroundColor3 = Color3.fromRGB(24, 22, 26)
+MobileMenuBtn.BorderColor3 = Color3.fromRGB(255, 100, 100)
+MobileMenuBtn.BorderSizePixel = 1
+MobileMenuBtn.Font = Enum.Font.Code
+MobileMenuBtn.Text = "[❤️Close UI]"
+MobileMenuBtn.TextColor3 = Color3.fromRGB(255, 120, 120)
+MobileMenuBtn.TextSize = 12
+MobileMenuBtn.ZIndex = 150
+MobileMenuBtn.Active = true
+MobileMenuBtn.Draggable = true -- 允許在手機畫面上拖曳位置
+MobileMenuBtn.Parent = ScreenGui
+
+local function updateMenuButtonText()
+    if isUnloaded then return end
+    if MainFrame.Visible then
+        MobileMenuBtn.Text = "[❤️Close UI]"
+        MobileMenuBtn.TextColor3 = Color3.fromRGB(255, 120, 120)
+    else
+        MobileMenuBtn.Text = "[❤️Open UI]"
+        MobileMenuBtn.TextColor3 = Color3.fromRGB(100, 255, 100)
+    end
+end
+
+TrackConnection(MobileMenuBtn.MouseButton1Click:Connect(function()
+    MainFrame.Visible = not MainFrame.Visible
+    updateMenuButtonText()
+end))
+
+-- Header Title
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(1, -20, 0, 22)
+TitleLabel.Position = UDim2.new(0, 10, 0, 2)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Font = Enum.Font.Code
+TitleLabel.Text = "Undertale Texture Pack | [🏆Mobile Remake]"
+TitleLabel.TextColor3 = Color3.fromRGB(220, 220, 225)
+TitleLabel.TextSize = 12
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+TitleLabel.Parent = MainFrame
+
+-- Tab Bar
+local TabBar = Instance.new("Frame")
+TabBar.Size = UDim2.new(1, -10, 0, 24)
+TabBar.Position = UDim2.new(0, 5, 0, 26)
+TabBar.BackgroundColor3 = Color3.fromRGB(24, 24, 28)
+TabBar.BorderColor3 = Color3.fromRGB(50, 50, 55)
+TabBar.BorderSizePixel = 1
+TabBar.Parent = MainFrame
+
+local TabListLayout = Instance.new("UIListLayout")
+TabListLayout.FillDirection = Enum.FillDirection.Horizontal
+TabListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+TabListLayout.Parent = TabBar
+
+local ContentContainer = Instance.new("Frame")
+ContentContainer.Size = UDim2.new(1, -10, 1, -56)
+ContentContainer.Position = UDim2.new(0, 5, 0, 54)
+ContentContainer.BackgroundTransparency = 1
+ContentContainer.Parent = MainFrame
+
+local Tabs = {}
+local function createTab(name, width)
+    local TabButton = Instance.new("TextButton")
+    TabButton.Size = UDim2.new(0, width, 1, 0)
+    TabButton.BackgroundColor3 = Color3.fromRGB(20, 20, 24)
+    TabButton.BorderColor3 = Color3.fromRGB(55, 55, 60)
+    TabButton.BorderSizePixel = 1
+    TabButton.Font = Enum.Font.Code
+    TabButton.Text = "[" .. name .. "]"
+    TabButton.TextColor3 = Color3.fromRGB(160, 160, 165)
+    TabButton.TextSize = 11
+    TabButton.Parent = TabBar
+
+    local TabPage = Instance.new("Frame")
+    TabPage.Size = UDim2.new(1, 0, 1, 0)
+    TabPage.BackgroundTransparency = 1
+    TabPage.Visible = false
+    TabPage.Parent = ContentContainer
+
+    TrackConnection(TabButton.MouseButton1Click:Connect(function()
+        for _, tab in pairs(Tabs) do
+            tab.Page.Visible = false
+            tab.Button.TextColor3 = Color3.fromRGB(160, 160, 165)
+            tab.Button.BackgroundColor3 = Color3.fromRGB(20, 20, 24)
+        end
+        TabPage.Visible = true
+        TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        TabButton.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+    end))
+
+    table.insert(Tabs, { Button = TabButton, Page = TabPage })
+    if #Tabs == 1 then
+        TabPage.Visible = true
+        TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        TabButton.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+    end
+
+    local ListLayout = Instance.new("UIListLayout")
+    ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    ListLayout.Padding = UDim.new(0, 5)
+    ListLayout.Parent = TabPage
+
+    return TabPage
+end
+
+-- UI Tabs Creation
+local TexturesTab = createTab("Texture Pack", 100)
+local MapTab = createTab("Map Darkener", 100)
+local SettingsTab = createTab("Unload", 100)
+
+-- ==========================================
+-- DYNAMIC JSON TEXTURE PACK SYSTEM
+-- ==========================================
+local OriginalAssets = setmetatable({}, {__mode = "k"})
+local ActivePackDisableFunc = nil
+local ActivePackButton = nil
+
+local function getAsset(url: string): string
+	local success, result = pcall(function()
+		if writefile and isfile and getcustomasset then
+			local fileName = "ut_" .. tostring(string.len(url) % 99999) .. "_" .. tostring(string.byte(url, 10) or 1) .. ".asset"
+			if not isfile(fileName) then
+				local data = game:HttpGet(url)
+				if data and #data > 80 then writefile(fileName, data) end
+			end
+			local asset = getcustomasset(fileName)
+			if asset and asset ~= "" then return asset end
+		end
+		return url
+	end)
+	return (success and result) or url
+end
+
+-- 完美導入你的 Undertale & Deltarune 材質/音效包設定檔
+local Rules = {
+	{ids = {12187323909, 12187320363, 12187354260, 12187342816, 12187280273, 12187303601, 12187262242, 12187288714, 12187341500, 12187271237, 12187341020}, url = "https://githubusercontent.com"},
+	{ids = {6384899588}, url = "rbxassetid://AUDIO_APPEARANCE.wav"}, -- 開場/登場音效 (intro)
+	{ids = {8483887957}, url = "rbxassetid://snd_weaponpull.wav"}, -- 武器拔出/閃爍音效 (sparkle pop -> weaponpull)
+	{ids = {16537337310, 16537449730}, url = "rbxassetid://snd_break1.wav"}, -- 破壞/擊碎音效 (all heads with ding)
+	{ids = {7658055825}, url = "rbxassetid://6372755229"},
+{ids = {17016581922}, url = "rbxassetid://break2.ogg"}, -- 淘汰音效 (elim -> break2)
+{ids = {16810321565}, url = "rbxassetid://snd_closet_impact.ogg"}, -- 失敗/落敗音效 (change lose to deltarune)
+{ids = {16770456156}, url = "rbxassetid://mus_sfx_a_lithit.wav"}, -- 二段跳音效 (d jump -> deltarune sndswallow)
+{ids = {177266782}, url = "rbxassetid://snd_select.wav"}, -- 介面點擊音效 (click ui -> select deltarune)
+{ids = {16492958314}, url = "rbxassetid://snd_scytheburst.wav"}, -- 衝刺音效 (dash -> deltadash)
+{ids = {16802957270}, url = "https://githubusercontent.com"},
+{ids = {103035811146294}, url = "rbxassetid://snd_b.wav"}, -- 地圖載入/初始化音效 (map init sound)
+{ids = {81461991645938}, url = "https://githubusercontent.com"},
+{ids = {16810041280}, url = "rbxassetid://mus_sfx_abreak.wav"}, -- 勝利音效 (change win to undertale)
+{ids = {16530229695, 16530229541, 16530229616}, url = "rbxassetid://mus_sfx_gigapunch.wav"}, -- 擊殺音效 (kill to undertale)
+{ids = {17138490999}, url = "rbxassetid://heal.ogg"}, -- 治療音效 (heal sfx)
+{ids = {13854780042}, url = "https://githubusercontent.com"},
+{ids = {13854780213}, url = "https://githubusercontent.com"},
+{ids = {17803962335}, url = "https://githubusercontent.com"},
+{ids = {18525513345}, url = "rbxassetid://snd_dimbox.wav"}, -- 配對音效 (matchmaking to undertale)
+{ids = {13110130082}, url = "rbxassetid://snd_credit_s.wav"}, -- 命中標記音效 (hitmarker change)
+{ids = {17153811469}, url = "rbxassetid://snd_breakc.wav"}, -- 近戰失敗/攻擊未命中音效 (quick melee fail)
+{ids = {13188153054, 13188242420, 13220167472, 13220167337}, url = "https://githubusercontent.com"},
+{ids = {17826470563}, url = "rbxassetid://Finale.ogg"}, -- 倒數音效 (countdown to finale)
+{ids = {17026600996}, url = "rbxassetid://snd_heavydamage.wav"}, -- 賽點音效 (matchpoint)
+{ids = {17467242617}, url = "rbxassetid://sdfinal.ogg"}, -- 猝死/延長賽音效 (sudden death)
+{ids = {18221725850, 18239670056, 18221726246}, url = "rbxassetid://snd_dumbvictory.wav"}, -- 另一種勝利音效 (win -> dumbvictory)
+{ids = {17813065011, 17813065464, 12099785239}, url = ""},
+{ids = {2108482005, 14147881792, 135908632589654, 84214501374682, 10196550937, 12261809766, 2108545280, 10196550667, 14147882149, 103020541883227, 89972436184102, 12261813110, 14147883091, 2108482395, 10196550128, 14147882405, 2108482542, 10196549902, 14147881297, 72960281658487, 92138082970751, 2108482676, 10196567794, 12261813678, 14147882761, 10196550367, 2108482231}, url = "rbxassetid://7658055825"},
+{ids = {127338559130032, 16294586406, 75156669118637, 93477262732302}, url = "https://githubusercontent.com"},
+{ids = {17697682466, 17733314783}, url = "rbxassetid://Hotel.mp3"}, -- 背景音樂 (change music)
+{ids = {133917828562858, 121503061771505}, url = "https://githubusercontent.com"},
+{ids = {133793956251748}, url = "https://githubusercontent.com"},
+{ids = {116941545385923}, url = "https://githubusercontent.com"},
+{ids = {106623367501544, 131795064007344, 73543520622815}, url = "https://githubusercontent.com"},
+{ids = {80716950169934}, url = "https://githubusercontent.com"},
+{ids = {136100661820261}, url = "https://githubusercontent.com"},
+{ids = {107898816876115}, url = "https://githubusercontent.com"},
+{ids = {134520747948636}, url = "https://githubusercontent.com"},
+{ids = {114166096331502}, url = "https://githubusercontent.com"},
+{ids = {90039594400813}, url = "https://githubusercontent.com"},
+{ids = {133903971285645}, url = "https://githubusercontent.com"},
+{ids = {82834564754747}, url = "https://githubusercontent.com"},
+{ids = {73345783863790}, url = "https://githubusercontent.com"},
+{ids = {113997689031026}, url = "https://githubusercontent.com"},
+{ids = {88059506918419}, url = "https://githubusercontent.com"},
+{ids = {112183171942172}, url = "https://githubusercontent.com"},
+{ids = {104871954739030}, url = "https://githubusercontent.com"},
+{ids = {109012386782238}, url = "https://githubusercontent.com"},
+{ids = {127982903682334}, url = "https://githubusercontent.com"},
+{ids = {106623367501544}, url = "https://githubusercontent.com"},
+{ids = {131795064007344}, url = "https://githubusercontent.com"},
+{ids = {17175092502, 17094014569}, url = "https://githubusercontent.com"},
+{ids = {111599878354131}, url = "https://githubusercontent.com"}
+}
+local IdMap = {}
+for _, rule in ipairs(Rules) do
+local asset = rule.url
+if string.sub(rule.url, 1, 4) == "http" then
+asset = getAsset(rule.url)
+end
+for _, id in ipairs(rule.ids) do IdMap[tostring(id)] = asset end
+end
+local function restoreAllOriginalAssets()
+for obj, props in pairs(OriginalAssets) do
+if obj and obj.Parent then
+for propName, origVal in pairs(props) do
+pcall(function() obj[propName] = origVal end)
+end
+end
+end
+table.clear(OriginalAssets)
+if ActivePackDisableFunc then
+ActivePackDisableFunc()
+ActivePackDisableFunc = nil
+end
+if ActivePackButton then
+ActivePackButton.Text = string.gsub(ActivePackButton.Text, "%[ON%]", "[OFF]")
+ActivePackButton.TextColor3 = Color3.fromRGB(210, 210, 215)
+ActivePackButton = nil
+end
+end
+local function applyTextureSwap(obj: Instance)
+if isUnloaded or not obj then return end
+local function replace(property: string)
+local success, value = pcall(function() return obj[property] end)
+if not success or type(value) ~= "string" then return end
+local id = string.match(value, "%d+")
+if id and IdMap[id] then
+if not OriginalAssets[obj] then OriginalAssets[obj] = {} end
+if not OriginalAssets[obj][property] then OriginalAssets[obj][property] = value end
+pcall(function() obj[property] = IdMap[id] end)
+end
+end
+if obj:IsA("Sound") then replace("SoundId")
+elseif obj:IsA("ImageLabel") or obj:IsA("ImageButton") then replace("Image")
+elseif obj:IsA("Decal") or obj:IsA("Texture") then replace("Texture")
+elseif obj:IsA("MeshPart") then replace("TextureID") end
+end
+-- Undertale Custom Pack Button
+local UndertalePackBtn = Instance.new("TextButton")
+UndertalePackBtn.Size = UDim2.new(1, 0, 0, 28)
+UndertalePackBtn.BackgroundColor3 = Color3.fromRGB(30, 25, 25)
+UndertalePackBtn.BorderColor3 = Color3.fromRGB(70, 65, 65)
+UndertalePackBtn.BorderSizePixel = 1
+UndertalePackBtn.Font = Enum.Font.Code
+UndertalePackBtn.Text = "[OFF] Undertale Theme Pack"
+UndertalePackBtn.TextColor3 = Color3.fromRGB(210, 210, 215)
+UndertalePackBtn.TextSize = 11
+UndertalePackBtn.Parent = TexturesTab
+local packEnabled = false
+local textureConn = nil
+TrackConnection(UndertalePackBtn.MouseButton1Click:Connect(function()
+packEnabled = not packEnabled
+if packEnabled then
+UndertalePackBtn.Text = "[ON] Undertale Theme Pack"
+UndertalePackBtn.TextColor3 = Color3.fromRGB(255, 100, 100)
+ActivePackButton = UndertalePackBtn
+batchProcess(game:GetDescendants(), applyTextureSwap, 150)
+textureConn = game.DescendantAdded:Connect(function(obj)
+if packEnabled and not isUnloaded and (obj:IsA("Sound") or obj:IsA("ImageLabel") or obj:IsA("ImageButton") or obj:IsA("Decal") or obj:IsA("Texture") or obj:IsA("MeshPart")) then
+task.defer(applyTextureSwap, obj)
+end
+end)
+TrackConnection(textureConn)
+else
+UndertalePackBtn.Text = "[OFF] Undertale Theme Pack"
+UndertalePackBtn.TextColor3 = Color3.fromRGB(210, 210, 215)
+if textureConn then
+textureConn:Disconnect()
+textureConn = nil
+end
+restoreAllOriginalAssets()
+end
+end))
+-- ==========================================
+-- MAP DARKENER SYSTEM
+-- ==========================================
+local darkenerEnabled = false
+local darknessLevel = 10
+local originalPartColors = setmetatable({}, {__mode = "k"})
+local originalLighting = {
+Brightness = Lighting.Brightness,
+OutdoorAmbient = Lighting.OutdoorAmbient,
+Ambient = Lighting.Ambient
+}
+local function getMultiplier()
+return (10 - darknessLevel) * 0.06
+end
+local function updateLighting()
+if darkenerEnabled and not isUnloaded then
+local mult = getMultiplier()
+Lighting.Brightness = mult
+Lighting.OutdoorAmbient = Color3.fromRGB(math.floor(20 * mult), math.floor(20 * mult), math.floor(25 * mult))
+Lighting.Ambient = Color3.fromRGB(math.floor(15 * mult), math.floor(15 * mult), math.floor(20 * mult))
+end
+end
+local function darkenInstance(part)
+if isUnloaded or not darkenerEnabled or not part or not part:IsA("BasePart") or not part:IsDescendantOf(workspace) then return end
+local model = part:FindFirstAncestorOfClass("Model")
+if model and Players:GetPlayerFromCharacter(model) then return end
+if part.Name == "HumanoidRootPart" or (part.Parent and part.Parent.Name == "Camera") then return end
+if not originalPartColors[part] then
+originalPartColors[part] = part.Color
+end
+local h, s, v = Color3.toHSV(originalPartColors[part])
+local targetVal = math.clamp(v * getMultiplier(), 0, 1)
+part.Color = Color3.fromHSV(h, s, targetVal)
+end
+local function applyDarknessToAll()
+updateLighting()
+batchProcess(workspace:GetDescendants(), darkenInstance, 200)
+end
+local function restoreLightingAndMap()
+darkenerEnabled = false
+Lighting.Brightness = originalLighting.Brightness
+Lighting.OutdoorAmbient = originalLighting.OutdoorAmbient
+Lighting.Ambient = originalLighting.Ambient
+for part, origColor in pairs(originalPartColors) do
+if part and part:IsDescendantOf(workspace) then
+pcall(function() part.Color = origColor end)
+end
+end
+table.clear(originalPartColors)
+end
+local DarkenerBtn = Instance.new("TextButton")
+DarkenerBtn.Size = UDim2.new(1, 0, 0, 28)
+DarkenerBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+DarkenerBtn.BorderColor3 = Color3.fromRGB(65, 65, 70)
+DarkenerBtn.BorderSizePixel = 1
+DarkenerBtn.Font = Enum.Font.Code
+DarkenerBtn.Text = "[OFF] Map Darkener"
+DarkenerBtn.TextColor3 = Color3.fromRGB(210, 210, 215)
+DarkenerBtn.TextSize = 11
+DarkenerBtn.Parent = MapTab
+local LevelLabel = Instance.new("TextLabel")
+LevelLabel.Size = UDim2.new(1, 0, 0, 18)
+LevelLabel.BackgroundTransparency = 1
+LevelLabel.Font = Enum.Font.Code
+LevelLabel.Text = "Darkness Level: [ 1 (Gray) -> 10 (Black) ]"
+LevelLabel.TextColor3 = Color3.fromRGB(180, 180, 185)
+LevelLabel.TextSize = 10
+LevelLabel.TextXAlignment = Enum.TextXAlignment.Left
+LevelLabel.Parent = MapTab
+local LevelContainer = Instance.new("Frame")
+LevelContainer.Size = UDim2.new(1, 0, 0, 26)
+LevelContainer.BackgroundTransparency = 1
+LevelContainer.Parent = MapTab
+local LevelListLayout = Instance.new("UIListLayout")
+LevelListLayout.FillDirection = Enum.FillDirection.Horizontal
+LevelListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+LevelListLayout.Padding = UDim.new(0, 2)
+LevelListLayout.Parent = LevelContainer
+local LevelButtons = {}
+for i = 1, 10 do
+local LvlBtn = Instance.new("TextButton")
+LvlBtn.Size = UDim2.new(0, 38, 1, 0)
+LvlBtn.BackgroundColor3 = (i == darknessLevel) and Color3.fromRGB(50, 50, 60) or Color3.fromRGB(24, 24, 28)
+LvlBtn.BorderColor3 = (i == darknessLevel) and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(60, 60, 65)
+LvlBtn.BorderSizePixel = 1
+LvlBtn.Font = Enum.Font.Code
+LvlBtn.Text = tostring(i)
+LvlBtn.TextColor3 = (i == darknessLevel) and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(180, 180, 185)
+LvlBtn.TextSize = 10
+LvlBtn.Parent = LevelContainer
+table.insert(LevelButtons, LvlBtn)
+TrackConnection(LvlBtn.MouseButton1Click:Connect(function()
+darknessLevel = i
+for idx, btn in ipairs(LevelButtons) do
+btn.BackgroundColor3 = (idx == darknessLevel) and Color3.fromRGB(50, 50, 60) or Color3.fromRGB(24, 24, 28)
+btn.BorderColor3 = (idx == darknessLevel) and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(60, 60, 65)
+btn.TextColor3 = (idx == darknessLevel) and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(180, 180, 185)
+end
+if darkenerEnabled then
+applyDarknessToAll()
+end
+end))
+end
+local darkenerConn = nil
+TrackConnection(DarkenerBtn.MouseButton1Click:Connect(function()
+darkenerEnabled = not darkenerEnabled
+DarkenerBtn.Text = darkenerEnabled and "[ON] Map Darkener" or "[OFF] Map Darkener"
+DarkenerBtn.TextColor3 = darkenerEnabled and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(210, 210, 215)
+if darkenerEnabled then
+applyDarknessToAll()
+darkenerConn = workspace.DescendantAdded:Connect(function(obj)
+if darkenerEnabled and not isUnloaded and obj:IsA("BasePart") then
+task.defer(darkenInstance, obj)
+end
+end)
+TrackConnection(darkenerConn)
+else
+if darkenerConn then
+darkenerConn:Disconnect()
+darkenerConn = nil
+end
+restoreLightingAndMap()
+end
+end))
+-- ==========================================
+-- ULTIMATE CRASH/UNLOAD SYSTEM
+-- ==========================================
+local UnloadBtn = Instance.new("TextButton")
+UnloadBtn.Size = UDim2.new(1, 0, 0, 32)
+UnloadBtn.BackgroundColor3 = Color3.fromRGB(60, 25, 25)
+UnloadBtn.BorderColor3 = Color3.fromRGB(120, 50, 50)
+UnloadBtn.BorderSizePixel = 1
+UnloadBtn.Font = Enum.Font.Code
+UnloadBtn.Text = "❌ UNLOAD SCRIPT"
+UnloadBtn.TextColor3 = Color3.fromRGB(255, 120, 120)
+UnloadBtn.TextSize = 12
+UnloadBtn.Parent = SettingsTab
+local function Unload()
+if isUnloaded then return end
+isUnloaded = true
+for _, conn in ipairs(Connections) do
+if conn and conn.Connected then
+pcall(function() conn:Disconnect() end)
+end
+end
+table.clear(Connections)
+restoreAllOriginalAssets()
+restoreLightingAndMap()
+if ScreenGui then
+pcall(function() ScreenGui:Destroy() end)
+end
+table.clear(OriginalAssets)
+table.clear(originalPartColors)
+table.clear(IdMap)
+table.clear(Rules)
+table.clear(Tabs)
+table.clear(LevelButtons)
+pcall(function()
+collectgarbage("collect")
+end)
+end
+TrackConnection(UnloadBtn.MouseButton1Click:Connect(Unload))
