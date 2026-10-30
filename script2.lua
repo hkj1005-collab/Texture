@@ -267,59 +267,59 @@ end
 -- 【完美重組優化版】：全面導入你給的實體雲端網址，並內建高相容性的純數字官方備用 ID
 local Rules = {
 	{ids = {12187323909, 12187320363, 12187354260, 12187342816, 12187280273, 12187303601, 12187262242, 12187288714, 12187341500, 12187271237, 12187341020}, url = "https://githubusercontent.com", backup = "rbxassetid://12187323909"},
-	{ids = {6384899588}, url = "https://githubusercontent.com", backup = "rbxassetid://9069609268"}, -- 開場
-	{ids = {8483887957}, url = "https://githubusercontent.com", backup = "rbxassetid://9114223147"}, -- 拔出
-{ids = {16537337310, 16537449730}, url = "githubusercontent.com", backup = "rbxassetid://6541285184"}, -- 擊碎
+	{ids = {6384899588}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9069609268"}, -- 開場
+	{ids = {8483887957}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9114223147"}, -- 拔出
+{ids = {16537337310, 16537449730}, url = "raw.githubusercontent.com", backup = "rbxassetid://6541285184"}, -- 擊碎
 {ids = {7658055825}, url = "rbxassetid://6372755229", backup = "rbxassetid://6372755229"},
-{ids = {17016581922}, url = "githubusercontent.com", backup = "rbxassetid://6541285184"}, -- 淘汰
-{ids = {16810321565}, url = "githubusercontent.com", backup = "rbxassetid://9083072214"}, -- 落敗
-{ids = {16770456156}, url = "githubusercontent.com", backup = "rbxassetid://9114221327"}, -- 二段跳
-{ids = {177266782}, url = "githubusercontent.com", backup = "rbxassetid://9114227181"}, -- 點擊 UI
-{ids = {16492958314}, url = "githubusercontent.com", backup = "rbxassetid://9117325515"}, -- 衝刺
-{ids = {16802957270}, url = "githubusercontent.com", backup = "rbxassetid://16802957270"},
-{ids = {103035811146294}, url = "githubusercontent.com", backup = "rbxassetid://9114223147"}, -- 地圖載入
-{ids = {81461991645938}, url = "githubusercontent.com", backup = "rbxassetid://81461991645938"},
-{ids = {16810041280}, url = "githubusercontent.com", backup = "rbxassetid://2923588961"}, -- 勝利
-{ids = {16530229695, 16530229541, 16530229616}, url = "githubusercontent.com", backup = "rbxassetid://5534241639"}, -- 擊殺
-{ids = {17138490999}, url = "githubusercontent.com", backup = "rbxassetid://6541282202"}, -- 治療
-{ids = {13854780042}, url = "githubusercontent.com", backup = "rbxassetid://13854780042"},
-{ids = {13854780213}, url = "githubusercontent.com", backup = "rbxassetid://13854780213"},
-{ids = {17803962335}, url = "githubusercontent.com", backup = "rbxassetid://17803962335"},
-{ids = {18525513345}, url = "githubusercontent.com", backup = "rbxassetid://9114227181"}, -- 配對
-{ids = {13110130082}, url = "githubusercontent.com", backup = "rbxassetid://5534241639"}, -- 命中
-{ids = {17153811469}, url = "githubusercontent.com", backup = "rbxassetid://9113636306"}, -- 近戰揮空
-{ids = {13188153054, 13188242420, 13220167472, 13220167337}, url = "githubusercontent.com", backup = "rbxassetid://13188153054"},
-{ids = {17826470563}, url = "githubusercontent.com", backup = "rbxassetid://3410787012"}, -- 倒數
-{ids = {17026600996}, url = "githubusercontent.com", backup = "rbxassetid://9113636306"}, -- 賽點
-{ids = {17467242617}, url = "githubusercontent.com", backup = "rbxassetid://3410787012"}, -- 延長賽
-{ids = {18221725850, 18239670056, 18221726246}, url = "githubusercontent.com", backup = "rbxassetid://2923588961"}, -- 另一勝利
+{ids = {17016581922}, url = "raw.githubusercontent.com", backup = "rbxassetid://6541285184"}, -- 淘汰
+{ids = {16810321565}, url = "raw.githubusercontent.com", backup = "rbxassetid://9083072214"}, -- 落敗
+{ids = {16770456156}, url = "raw.githubusercontent.com", backup = "rbxassetid://9114221327"}, -- 二段跳
+{ids = {177266782}, url = "raw.githubusercontent.com", backup = "rbxassetid://9114227181"}, -- 點擊 UI
+{ids = {16492958314}, url = "raw.githubusercontent.com", backup = "rbxassetid://9117325515"}, -- 衝刺
+{ids = {16802957270}, url = "raw.githubusercontent.com", backup = "rbxassetid://16802957270"},
+{ids = {103035811146294}, url = "raw.githubusercontent.com", backup = "rbxassetid://9114223147"}, -- 地圖載入
+{ids = {81461991645938}, url = "raw.githubusercontent.com", backup = "rbxassetid://81461991645938"},
+{ids = {16810041280}, url = "raw.githubusercontent.com", backup = "rbxassetid://2923588961"}, -- 勝利
+{ids = {16530229695, 16530229541, 16530229616}, url = "raw.githubusercontent.com", backup = "rbxassetid://5534241639"}, -- 擊殺
+{ids = {17138490999}, url = "raw.githubusercontent.com", backup = "rbxassetid://6541282202"}, -- 治療
+{ids = {13854780042}, url = "raw.githubusercontent.com", backup = "rbxassetid://13854780042"},
+{ids = {13854780213}, url = "raw.githubusercontent.com", backup = "rbxassetid://13854780213"},
+{ids = {17803962335}, url = "raw.githubusercontent.com", backup = "rbxassetid://17803962335"},
+{ids = {18525513345}, url = "raw.githubusercontent.com", backup = "rbxassetid://9114227181"}, -- 配對
+{ids = {13110130082}, url = "raw.githubusercontent.com", backup = "rbxassetid://5534241639"}, -- 命中
+{ids = {17153811469}, url = "raw.githubusercontent.com", backup = "rbxassetid://9113636306"}, -- 近戰揮空
+{ids = {13188153054, 13188242420, 13220167472, 13220167337}, url = "raw.githubusercontent.com", backup = "rbxassetid://13188153054"},
+{ids = {17826470563}, url = "raw.githubusercontent.com", backup = "rbxassetid://3410787012"}, -- 倒數
+{ids = {17026600996}, url = "raw.githubusercontent.com", backup = "rbxassetid://9113636306"}, -- 賽點
+{ids = {17467242617}, url = "raw.githubusercontent.com", backup = "rbxassetid://3410787012"}, -- 延長賽
+{ids = {18221725850, 18239670056, 18221726246}, url = "raw.githubusercontent.com", backup = "rbxassetid://2923588961"}, -- 另一勝利
 {ids = {17813065011, 17813065464, 12099785239}, url = "", backup = ""},
 {ids = {2108482005, 14147881792, 135908632589654, 84214501374682, 10196550937, 12261809766, 2108545280, 10196550667, 14147882149, 103020541883227, 89972436184102, 12261813110, 14147883091, 2108482395, 10196550128, 14147882405, 2108482542, 10196549902, 14147881297, 72960281658487, 92138082970751, 2108482676, 10196567794, 12261813678, 14147882761, 10196550367, 2108482231}, url = "rbxassetid://7658055825", backup = "rbxassetid://7658055825"},
-{ids = {127338559130032, 16294586406, 75156669118637, 93477262732302}, url = "githubusercontent.com", backup = "rbxassetid://127338559130032"},
-{ids = {17697682466, 17733314783}, url = "githubusercontent.com", backup = "rbxassetid://9043887031"}, -- 音樂 (Megalovania)
-{ids = {133917828562858, 121503061771505}, url = "githubusercontent.com", backup = "rbxassetid://133917828562858"},
-{ids = {133793956251748}, url = "githubusercontent.com", backup = "rbxassetid://133793956251748"},
-{ids = {116941545385923}, url = "githubusercontent.com", backup = "rbxassetid://116941545385923"},
-{ids = {106623367501544, 131795064007344, 73543520622815}, url = "githubusercontent.com", backup = "rbxassetid://106623367501544"},
-{ids = {80716950169934}, url = "githubusercontent.com", backup = "rbxassetid://80716950169934"},
-{ids = {136100661820261}, url = "githubusercontent.com", backup = "rbxassetid://136100661820261"},
-{ids = {107898816876115}, url = "githubusercontent.com", backup = "rbxassetid://107898816876115"},
-{ids = {134520747948636}, url = "githubusercontent.com", backup = "rbxassetid://134520747948636"},
-{ids = {114166096331502}, url = "githubusercontent.com", backup = "rbxassetid://114166096331502"},
-{ids = {90039594400813}, url = "githubusercontent.com", backup = "rbxassetid://90039594400813"},
-{ids = {133903971285645}, url = "githubusercontent.com", backup = "rbxassetid://133903971285645"},
-{ids = {82834564754747}, url = "githubusercontent.com", backup = "rbxassetid://82834564754747"},
-{ids = {73345783863790}, url = "githubusercontent.com", backup = "rbxassetid://73345783863790"},
-{ids = {113997689031026}, url = "githubusercontent.com", backup = "rbxassetid://113997689031026"},
-{ids = {88059506918419}, url = "githubusercontent.com", backup = "rbxassetid://88059506918419"},
-{ids = {112183171942172}, url = "githubusercontent.com", backup = "rbxassetid://112183171942172"},
-{ids = {104871954739030}, url = "githubusercontent.com", backup = "rbxassetid://104871954739030"},
-{ids = {109012386782238}, url = "githubusercontent.com", backup = "rbxassetid://109012386782238"},
-{ids = {127982903682334}, url = "githubusercontent.com", backup = "rbxassetid://127982903682334"},
-{ids = {106623367501544}, url = "githubusercontent.com", backup = "rbxassetid://106623367501544"},
-{ids = {131795064007344}, url = "githubusercontent.com", backup = "rbxassetid://131795064007344"},
-{ids = {17175092502, 17094014569}, url = "githubusercontent.com", backup = "rbxassetid://17175092502"},
-{ids = {111599878354131}, url = "githubusercontent.com", backup = "rbxassetid://111599878354131"}
+{ids = {127338559130032, 16294586406, 75156669118637, 93477262732302}, url = "raw.githubusercontent.com", backup = "rbxassetid://127338559130032"},
+{ids = {17697682466, 17733314783}, url = "raw.githubusercontent.com", backup = "rbxassetid://9043887031"}, -- 音樂 (Megalovania)
+{ids = {133917828562858, 121503061771505}, url = "raw.githubusercontent.com", backup = "rbxassetid://133917828562858"},
+{ids = {133793956251748}, url = "raw.githubusercontent.com", backup = "rbxassetid://133793956251748"},
+{ids = {116941545385923}, url = "raw.githubusercontent.com", backup = "rbxassetid://116941545385923"},
+{ids = {106623367501544, 131795064007344, 73543520622815}, url = "raw.githubusercontent.com", backup = "rbxassetid://106623367501544"},
+{ids = {80716950169934}, url = "raw.githubusercontent.com", backup = "rbxassetid://80716950169934"},
+{ids = {136100661820261}, url = "raw.githubusercontent.com", backup = "rbxassetid://136100661820261"},
+{ids = {107898816876115}, url = "raw.githubusercontent.com", backup = "rbxassetid://107898816876115"},
+{ids = {134520747948636}, url = "raw.githubusercontent.com", backup = "rbxassetid://134520747948636"},
+{ids = {114166096331502}, url = "raw.githubusercontent.com", backup = "rbxassetid://114166096331502"},
+{ids = {90039594400813}, url = "raw.githubusercontent.com", backup = "rbxassetid://90039594400813"},
+{ids = {133903971285645}, url = "raw.githubusercontent.com", backup = "rbxassetid://133903971285645"},
+{ids = {82834564754747}, url = "raw.githubusercontent.com", backup = "rbxassetid://82834564754747"},
+{ids = {73345783863790}, url = "raw.githubusercontent.com", backup = "rbxassetid://73345783863790"},
+{ids = {113997689031026}, url = "raw.githubusercontent.com", backup = "rbxassetid://113997689031026"},
+{ids = {88059506918419}, url = "raw.githubusercontent.com", backup = "rbxassetid://88059506918419"},
+{ids = {112183171942172}, url = "raw.githubusercontent.com", backup = "rbxassetid://112183171942172"},
+{ids = {104871954739030}, url = "raw.githubusercontent.com", backup = "rbxassetid://104871954739030"},
+{ids = {109012386782238}, url = "raw.githubusercontent.com", backup = "rbxassetid://109012386782238"},
+{ids = {127982903682334}, url = "raw.githubusercontent.com", backup = "rbxassetid://127982903682334"},
+{ids = {106623367501544}, url = "raw.githubusercontent.com", backup = "rbxassetid://106623367501544"},
+{ids = {131795064007344}, url = "raw.githubusercontent.com", backup = "rbxassetid://131795064007344"},
+{ids = {17175092502, 17094014569}, url = "raw.githubusercontent.com", backup = "rbxassetid://17175092502"},
+{ids = {111599878354131}, url = "raw.githubusercontent.com", backup = "rbxassetid://111599878354131"}
 }
 local IdMap = {}
 for _, rule in ipairs(Rules) do
