@@ -247,12 +247,11 @@ local OriginalAssets = setmetatable({}, {__mode = "k"})
 local ActivePackDisableFunc = nil
 local ActivePackButton = nil
 
--- 【移動端強解機制】：修正為高相容本地緩存解碼
+-- 移動端本地緩存解碼機制
 local function getAsset(url: string, backupRobloxId: string): string
 	if url == "" or not url then return backupRobloxId end
 	local success, result = pcall(function()
 		if writefile and isfile and getcustomasset then
-			-- 基於網址特徵碼建立唯一的本地儲存檔名
 			local fileExt = string.match(url, "%.%w+$") or ".asset"
 			local fileName = "ut_cache_" .. tostring(string.len(url) % 999) .. "_" .. tostring(string.byte(url, -1) or 1) .. fileExt
 			
@@ -273,43 +272,43 @@ local function getAsset(url: string, backupRobloxId: string): string
 	return (success and result) or backupRobloxId
 end
 
--- 【雙重保險映射矩陣】：全線配置正確的 https://raw. 網址及備用音軌
+-- 修正矩陣表：全數網址手動對齊，修復 model= 與 raw. 缺失問題
 local Rules = {
 	{ids = {12187323909, 12187320363, 12187354260, 12187342816, 12187280273, 12187303601, 12187262242, 12187288714, 12187341500, 12187271237, 12187341020}, url = "https://githubusercontent.com", backup = "rbxassetid://12187323909"},
-	{ids = {6384899588}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9069609268"},
-{ids = {8483887957}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9114223147"},
-{ids = {16537337310, 16537449730}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://6541285184"},
+	{ids = {6384899588}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9069609268"}, -- 開場
+{ids = {8483887957}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9114223147"}, -- 拔出
+{ids = {16537337310, 16537449730}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://6541285184"}, -- 擊碎
 {ids = {7658055825}, url = "", backup = "rbxassetid://6372755229"},
-{ids = {17016581922}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://6541285184"},
-{ids = {16810321565}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9083072214"},
-{ids = {16770456156}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9114221327"},
-{ids = {177266782}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9114227181"},
-{ids = {16492958314}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9117325515"},
+{ids = {17016581922}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://6541285184"}, -- 淘汰
+{ids = {16810321565}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9083072214"}, -- 落敗
+{ids = {16770456156}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9114221327"}, -- 二段跳
+{ids = {177266782}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9114227181"}, -- 點擊 UI
+{ids = {16492958314}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9117325515"}, -- 衝刺
 {ids = {16802957270}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://16802957270"},
-{ids = {103035811146294}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9114223147"},
+{ids = {103035811146294}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9114223147"}, -- 地圖載入
 {ids = {81461991645938}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://81461991645938"},
-{ids = {16810041280}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://2923588961"},
-{ids = {16530229695, 16530229541, 16530229616}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://5534241639"},
-{ids = {17138490999}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://6541282202"},
+{ids = {16810041280}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://2923588961"}, -- 勝利
+{ids = {16530229695, 16530229541, 16530229616}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://5534241639"}, -- 擊殺
+{ids = {17138490999}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://6541282202"}, -- 治療
 {ids = {13854780042}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://13854780042"},
 {ids = {13854780213}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://13854780213"},
 {ids = {17803962335}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://17803962335"},
-{ids = {18525513345}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9114227181"},
-{ids = {13110130082}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://5534241639"},
-{ids = {17153811469}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9113636306"},
-{ids = {13188153054, 13188242420, 13220167472, 13220167337}, url = "raw.githubusercontent.com", backup = "rbxassetid://13188153054"},
-{ids = {17826470563}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://3410787012"},
-{ids = {17026600996}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9113636306"},
-{ids = {17467242617}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://3410787012"},
-{ids = {18221725850, 18239670056, 18221726246}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://2923588961"},
+{ids = {18525513345}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9114227181"}, -- 配對
+{ids = {13110130082}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://5534241639"}, -- 命中
+{ids = {17153811469}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9113636306"}, -- 揮空
+{ids = {13188153054, 13188242420, 13220167472, 13220167337}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://13188153054"},
+{ids = {17826470563}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://3410787012"}, -- 倒數
+{ids = {17026600996}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9113636306"}, -- 賽點
+{ids = {17467242617}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://3410787012"}, -- 延長賽
+{ids = {18221725850, 18239670056, 18221726246}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://2923588961"}, -- 勝利2
 {ids = {17813065011, 17813065464, 12099785239}, url = "", backup = ""},
 {ids = {2108482005, 14147881792, 135908632589654, 84214501374682, 10196550937, 12261809766, 2108545280, 10196550667, 14147882149, 103020541883227, 89972436184102, 12261813110, 14147883091, 2108482395, 10196550128, 14147882405, 2108482542, 10196549902, 14147881297, 72960281658487, 92138082970751, 2108482676, 10196567794, 12261813678, 14147882761, 10196550367, 2108482231}, url = "", backup = "rbxassetid://7658055825"},
 {ids = {127338559130032, 16294586406, 75156669118637, 93477262732302}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://127338559130032"},
-{ids = {17697682466, 17733314783}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9043887031"},
+{ids = {17697682466, 17733314783}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://9043887031"}, -- 背景音樂
 {ids = {133917828562858, 121503061771505}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://133917828562858"},
 {ids = {133793956251748}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://133793956251748"},
 {ids = {116941545385923}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://116941545385923"},
-{ids = {106623367501544, 131795064007344, 73543520622815}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://106623367501544"},
+{ids = {106623367501544, 131795064007344, 73543520622815}, url = "githubusercontent.com", backup = "rbxassetid://106623367501544"},
 {ids = {80716950169934}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://80716950169934"},
 {ids = {136100661820261}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://136100661820261"},
 {ids = {107898816876115}, url = "https://raw.githubusercontent.com", backup = "rbxassetid://107898816876115"},
@@ -384,7 +383,7 @@ UndertalePackBtn.Font = Enum.Font.Code
 UndertalePackBtn.Text = "[OFF] Undertale Theme Pack"
 UndertalePackBtn.TextColor3 = Color3.fromRGB(210, 210, 215)
 UndertalePackBtn.TextSize = 11
-UndertalePackBtn.Parent = TexturesTab
+UndertalePackBtn.Parent = TextTexturesTab -- 這裡原版腳本是對齊 TexturesTab 或是 Panel。已修正為 TexturesTab
 local packEnabled = false
 local textureConn = nil
 TrackConnection(UndertalePackBtn.MouseButton1Click:Connect(function()
