@@ -38,21 +38,21 @@ end
 -- 終極對齊映射矩陣表 (完全按照你的實體雲端網址重新對齊)
 local Rules = {
 	{ids = {12187323909, 12187320363, 12187354260, 12187342816, 12187280273, 12187303601, 12187262242, 12187288714, 12187341500, 12187271237, 12187341020}, url = "https://githubusercontent.com", backup = "rbxassetid://12187323909"},
-	{ids = {6384899588}, url = "https://githubusercontent.com", backup = "rbxassetid://9069609268"}, -- 開場
-	{ids = {8483887957}, url = "https://githubusercontent.com", backup = "rbxassetid://9114223147"}, -- 拔出
-	{ids = {16537337310, 16537449730}, url = "https://githubusercontent.com", backup = "rbxassetid://6541285184"}, -- 擊碎
-	{ids = {7658055825}, url = "", backup = "rbxassetid://6372755229"}, -- arena change to basalt
-	{ids = {17016581922}, url = "https://githubusercontent.com", backup = "rbxassetid://6541285184"}, -- 淘汰
-	{ids = {16810321565}, url = "https://githubusercontent.com", backup = "rbxassetid://9083072214"}, -- 落敗
-	{ids = {16770456156}, url = "https://githubusercontent.com", backup = "rbxassetid://9114221327"}, -- 二段跳
-	{ids = {177266782}, url = "https://githubusercontent.com", backup = "rbxassetid://9114227181"}, -- 點擊 UI
-	{ids = {16492958314}, url = "https://githubusercontent.com", backup = "rbxassetid://9117325515"}, -- 衝刺
-	{ids = {16802957270}, url = "https://githubusercontent.com", backup = "rbxassetid://16802957270"},
-	{ids = {103035811146294}, url = "https://githubusercontent.com", backup = "rbxassetid://9114223147"}, -- 地圖載入
-	{ids = {81461991645938}, url = "https://githubusercontent.com", backup = "rbxassetid://81461991645938"},
-	{ids = {16810041280}, url = "https://githubusercontent.com", backup = "rbxassetid://2923588961"}, -- 勝利
-	{ids = {16530229695, 16530229541, 16530229616}, url = "https://githubusercontent.com", backup = "rbxassetid://5534241639"}, -- 擊殺
-	{ids = {17138490999}, url = "https://githubusercontent.com", backup = "rbxassetid://6541282202"}, -- 治療
+	{ids = {6384899588}, url = "appearance.wav⁠", backup = "rbxassetid://9069609268"}, -- 開場
+	{ids = {8483887957}, url = "weaponpull.wav⁠", backup = "rbxassetid://9114223147"}, -- 拔出
+	{ids = {16537337310, 16537449730}, url = "break1.wav", backup = "rbxassetid://6541285184"}, -- 擊碎
+	{ids = {7658055825}, backup = "rbxassetid://6372755229"}, -- arena change to basalt
+	{ids = {17016581922}, url = "break2.ogg⁠", backup = "rbxassetid://6541285184"}, -- 淘汰
+	{ids = {16810321565}, url = "closet_impact.ogg⁠", backup = "rbxassetid://9083072214"}, -- 落敗
+	{ids = {16770456156}, url = "lithit.wav⁠", backup = "rbxassetid://9114221327"}, -- 二段跳
+	{ids = {177266782}, url = "select.wav⁠", backup = "rbxassetid://9114227181"}, -- 點擊 UI
+	{ids = {16492958314}, url = "scytheburst.wav", backup = "rbxassetid://9117325515"}, -- 衝刺
+	{ids = {16802957270}, url = "https://raw.githubusercontent.com/prism658/undertale-txtpack/main/heartbroken.png⁠", backup = "rbxassetid://16802957270"},
+	{ids = {103035811146294}, url = "snd_b.wav", backup = "rbxassetid://9114223147"}, -- 地圖載入
+	{ids = {81461991645938}, url = "https://raw.githubusercontent.com/prism658/undertale-txtpack/main/lvl.png⁠", backup = "rbxassetid://81461991645938"},
+	{ids = {16810041280}, url = "mus_sfx_abreak.wav", backup = "rbxassetid://2923588961"}, -- 勝利
+	{ids = {16530229695, 16530229541, 16530229616}, url = "gigapunch.wav", backup = "rbxassetid://5534241639"}, -- 擊殺
+	{ids = {17138490999}, url = "heal.ogg⁠", backup = "rbxassetid://6541282202"}, -- 治療
 	{ids = {13854780042}, url = "https://githubusercontent.com", backup = "rbxassetid://13854780042"},
 	{ids = {13854780213}, url = "https://githubusercontent.com", backup = "rbxassetid://13854780213"},
 	{ids = {17803962335}, url = "https://githubusercontent.com", backup = "rbxassetid://17803962335"},
