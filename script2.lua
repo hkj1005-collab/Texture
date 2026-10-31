@@ -102,7 +102,7 @@ local function showNotification(titleText, bodyText, duration)
         if not isUnloaded and NotifFrame and NotifFrame.Parent then
             local tweenOut = TweenService:Create(NotifFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
                 Position = UDim2.new(0, -270, 1, -70)
-			})
+            })
             tweenOut:Play()
             tweenOut.Completed:Connect(function()
                 NotifFrame:Destroy()
@@ -272,7 +272,7 @@ local function getAsset(url: string, backupRobloxId: string): string
 	return (success and result) or backupRobloxId
 end
 
--- 【終極排查修復版】：所有網址開頭全數校正為 https://raw. 並且全數對齊對應的 GitHub 檔案名稱，且徹底移除 model= 的語法報錯
+-- 修正矩陣表：移除 model= 語法錯誤，完整補齊協議頭
 local Rules = {
 	{ids = {12187323909, 12187320363, 12187354260, 12187342816, 12187280273, 12187303601, 12187262242, 12187288714, 12187341500, 12187271237, 12187341020}, url = "https://githubusercontent.com", backup = "rbxassetid://12187323909"},
 	{ids = {6384899588}, url = "https://githubusercontent.com", backup = "rbxassetid://9069609268"}, -- 開場
@@ -302,7 +302,7 @@ local Rules = {
 {ids = {17467242617}, url = "githubusercontent.com", backup = "rbxassetid://3410787012"}, -- 延長賽
 {ids = {18221725850, 18239670056, 18221726246}, url = "githubusercontent.com", backup = "rbxassetid://2923588961"}, -- 勝利2
 {ids = {17813065011, 17813065464, 12099785239}, url = "", backup = ""},
-{ids = {2108482005, 14147881792, 135908632589654, 84214501374682, 10196550937, 12261809766, 2108545280, 10196550667, 14147882149, 103020541883227, 89972436184102, 12261813110, 14147883091, 2108482395, 10196550128, 14147882405, 2108482542, 10196549902, 14147881297, 72960281658487, 92138082970751, 2108482676, 10196567794, 12261813678, 14147882761, 10196550367, 2108482231}, url = "", backup = "rbxassetid://7658055825"}, -- 此行已剔除 model = 的語法錯誤
+{ids = {2108482005, 14147881792, 135908632589654, 84214501374682, 10196550937, 12261809766, 2108545280, 10196550667, 14147882149, 103020541883227, 89972436184102, 12261813110, 14147883091, 2108482395, 10196550128, 14147882405, 2108482542, 10196549902, 14147881297, 72960281658487, 92138082970751, 2108482676, 10196567794, 12261813678, 14147882761, 10196550367, 2108482231}, url = "", backup = "rbxassetid://7658055825"},
 {ids = {127338559130032, 16294586406, 75156669118637, 93477262732302}, url = "githubusercontent.com", backup = "rbxassetid://127338559130032"},
 {ids = {17697682466, 17733314783}, url = "githubusercontent.com", backup = "rbxassetid://9043887031"}, -- 背景音樂
 {ids = {133917828562858, 121503061771505}, url = "githubusercontent.com", backup = "rbxassetid://133917828562858"},
@@ -383,7 +383,7 @@ UndertalePackBtn.Font = Enum.Font.Code
 UndertalePackBtn.Text = "[OFF] Undertale Theme Pack"
 UndertalePackBtn.TextColor3 = Color3.fromRGB(210, 210, 215)
 UndertalePackBtn.TextSize = 11
-UndertalePackBtn.Parent = TextTexturesTab
+UndertalePackBtn.Parent = TexturesTab
 local packEnabled = false
 local textureConn = nil
 TrackConnection(UndertalePackBtn.MouseButton1Click:Connect(function()
