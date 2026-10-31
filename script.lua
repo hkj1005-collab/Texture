@@ -268,7 +268,7 @@ end
 
 -- 完美導入你的 Undertale 材質包設定檔
 local Rules = {
-	{ids = {12187323909, 12187320363, 12187354260, 12187342816, 12187280273, 12187303601, 12187262242, 12187288714, 12187341500, 12187271237, 12187341020}, url = "https://githubusercontent.com"},
+	{ids = {12187323909, 12187320363, 12187354260, 12187342816, 12187280273, 12187303601, 12187262242, 12187288714, 12187341500, 12187271237, 12187341020}, url = "https://raw.githubusercontent.com/prism658/undertale-txtpack/main/deltarune.ttf⁠"},"https://raw.githubusercontent.com/prism658/undertale-txtpack/main/PixelOperator-Bold.ttf⁠},
 	{ids = {6384899588}, url = "https://githubusercontent.com"},
 	{ids = {8483887957}, url = "https://githubusercontent.com"},
 {ids = {16537337310, 16537449730}, url = "githubusercontent.com"},
