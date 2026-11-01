@@ -265,8 +265,8 @@ end
 
 -- 【完美修復版】：全面補齊完整正確的 GitHub 雲端檔案路徑
 local Rules = {
-	{ids = {12187323909, 12187320363, 12187354260, 12187342816, 12187280273, 12187303601, 12187262242, 12187288714, 12187341500, 12187271237, 12187341020}, url = "https://githubusercontent.com"},
-	{ids = {6384899588}, url = "https://githubusercontent.com"}, -- 開場音效
+	{ids = {12187323909, 12187320363, 12187354260, 12187342816, 12187280273, 12187303601, 12187262242, 12187288714, 12187341500, 12187271237, 12187341020}, url = "raw.githubusercontent.com/prism658/undertale-txtpack/main/deltarune.ttf⁠},
+	{ids = {6384899588}, url = "https://raw.appearance.wav⁠"}, -- 開場音效
 	{ids = {8483887957}, url = "https://githubusercontent.com"}, -- 武器拔出
 	{ids = {16537337310, 16537449730}, url = "https://githubusercontent.com"}, -- 擊碎音效
 	{ids = {7658055825}, url = "rbxassetid://6372755229"},
